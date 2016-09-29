@@ -2,7 +2,7 @@
  * Created by rodrigohenriques on 9/29/16.
  */
 const fs = require('fs');
-const commandsPath = './commands_2';
+const commandsPath = './commands';
 
 exports.addCommand = function (name, code) {
     var template = "templates/simple.template";
