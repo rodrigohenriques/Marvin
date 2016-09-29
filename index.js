@@ -1,8 +1,17 @@
 /**
  * Created by rodrigohenriques on 9/29/16.
  */
-var writer = require('./command/writer');
+'use strict';
 
-writer.addCommand("hello", "console.log('Hello world');");
-writer.addCommand("ola", "console.log('Olá mundo');");
+var Marvin = require('./bot/marvin');
+var properties = require('./properties.json');
 
+var token = process.env.BOT_API_KEY || properties.token;
+var name = process.env.BOT_NAME || properties.name;
+
+var marvin = new Marvin({
+    token: token,
+    name: name
+});
+
+marvin.run();

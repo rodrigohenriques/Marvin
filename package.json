@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rodrigohenriques/MarvinBot#readme",
   "dependencies": {
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "slackbots": "^0.5.2"
   }
 }
