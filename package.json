@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/rodrigohenriques/MarvinBot/issues"
   },
-  "homepage": "https://github.com/rodrigohenriques/MarvinBot#readme"
+  "homepage": "https://github.com/rodrigohenriques/MarvinBot#readme",
+  "dependencies": {
+    "path": "^0.12.7"
+  }
 }
