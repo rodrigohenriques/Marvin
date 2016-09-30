@@ -1,2 +1,2 @@
-# MarvinBot
-Utilitário pra ajudar nas tarefas do dia a dia
+# Marvin
+A custom Slackbot to help with your daily issues.
