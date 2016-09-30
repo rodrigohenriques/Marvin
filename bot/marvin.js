@@ -38,19 +38,17 @@ Marvin.prototype._loadBotUser = function () {
 };
 
 Marvin.prototype._onMessage = function (message) {
-    if (shouldIgnore(this, message)) {
+    if (!this._isChatMessage(message)) {
         return;
     }
 
     logMessage(message);
 
-    if (!this._wasMentioned(message) && !this._isChatMessage(message)) {
+    if (this._isChannelConversation(message) && !this._wasMentioned(message)) {
         return;
     }
 
-    if (message.type === "message") {
-        messageHandler.handle(this, message);
-    }
+    messageHandler.handle(this, message);
 };
 
 Marvin.prototype._wasMentioned = function (message) {
@@ -83,14 +81,6 @@ Marvin.prototype._getChannelById = function (channelId) {
 };
 
 module.exports = Marvin;
-
-
-function shouldIgnore(marvin, message) {
-    return message.type.indexOf('presence') > -1 ||
-        message.type === 'reconnect_url' ||
-        message.type === 'user_typing' ||
-        marvin._isFromMarvin(message);
-}
 
 function logMessage(message) {
     console.log(util.inspect(message));
