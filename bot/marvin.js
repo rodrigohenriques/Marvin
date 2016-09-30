@@ -42,11 +42,11 @@ Marvin.prototype._onMessage = function (message) {
         return;
     }
 
-    logMessage(message);
-
-    if (this._isChannelConversation(message) && !this._wasMentioned(message)) {
+    if (this._isFromMarvin(message)) {
         return;
     }
+
+    logMessage(message);
 
     messageHandler.handle(this, message);
 };

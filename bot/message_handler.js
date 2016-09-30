@@ -22,6 +22,10 @@ exports.handle = function(marvin, message) {
     var commandName = null;
 
     if (commandFactory === undefined) {
+        if (marvin._isChannelConversation(message) && !marvin._wasMentioned(message)) {
+            return;
+        }
+
         if (words[0] === 'create') {
             commandName = words[1];
 
@@ -39,6 +43,7 @@ exports.handle = function(marvin, message) {
                 var result = runner.execute(commandName);
                 marvin.postMessage(channel, result, {});
             } else {
+                console.log("posting message");
                 marvin.postMessage(channel, "Teach me something...", {});
             }
         }

@@ -19,6 +19,9 @@ exports.addCommand = function (name, code) {
         if (err) {
             return console.log(err);
         }
+        code = code.replace("&lt;", "<");
+        code = code.replace("&gt;", ">");
+
         var result = data.replace(/#code#/g, code);
 
         var exists = fs.existsSync(commandsPath);
