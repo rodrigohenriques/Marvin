@@ -4,7 +4,8 @@
   "description": "Utilitário pra ajudar nas tarefas do dia a dia",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "supervisor index.js"
   },
   "repository": {
     "type": "git",

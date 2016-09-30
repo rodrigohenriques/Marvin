@@ -7,12 +7,27 @@ exports.exec = function(command) {
         return;
     }
 
-    var commandRunner = require('./commands/' + command + '.js');
+    var commandRunner = getCommand(command);
 
     if (commandRunner === undefined) {
         console.log('Undefined command');
         return;
     }
 
-    commandRunner.run();
+    return commandRunner.run();
 };
+
+exports.hasCommand = function(command) {
+    try {
+        var commandRunner = getCommand(command);
+
+        return commandRunner !== undefined;
+    } catch (err) {
+        return false;
+    }
+};
+
+
+function getCommand(command) {
+    return require('../commands/' + command);
+}

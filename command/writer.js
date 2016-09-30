@@ -4,6 +4,14 @@
 const fs = require('fs');
 const commandsPath = './commands';
 
+exports.createStash = {};
+
+exports.createCommand = function(commandName) {
+    return function(code) {
+        return exports.addCommand(commandName, code);
+    }
+};
+
 exports.addCommand = function (name, code) {
     var template = "templates/simple.template";
 
