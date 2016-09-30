@@ -1,7 +1,7 @@
 /**
  * Created by rodrigohenriques on 9/29/16.
  */
-exports.exec = function(command) {
+exports.execute = function(command) {
     if (command === undefined) {
         console.log('Undefined command');
         return;

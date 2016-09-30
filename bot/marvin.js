@@ -7,8 +7,7 @@ const util = require('util');
 const path = require('path');
 const fs = require('fs');
 const Bot = require('slackbots');
-const writer = require('../command/writer');
-const runner = require('../command/runner');
+const messageHandler = require('./message_handler');
 
 var Marvin = function Constructor(settings) {
     this.settings = settings;
@@ -45,52 +44,16 @@ Marvin.prototype._onMessage = function (message) {
 
     logMessage(message);
 
-    var channel = message.channel;
-
-    if (!this._isMentioningMarvin(message) && !this._isChatMessage(message)) {
+    if (!this._wasMentioned(message) && !this._isChatMessage(message)) {
         return;
     }
 
     if (message.type === "message") {
-        var text = message.text;
-
-        var words = text.split(' ');
-
-        if (this._isMentioningMarvin(message)) {
-            words = words.slice(1);
-        }
-
-        var command = writer.createStash[message.user];
-
-        if (command === undefined) {
-            if (words[0] === 'create') {
-                var commandName = words[1];
-
-                writer.createStash[message.user] = {
-                    name: commandName,
-                    create: writer.createCommand(commandName)
-                };
-
-                this.postMessage(channel, "Ok, I will create the command " + commandName + " for you.\n" +
-                    "Tell me which JS do you want to run. Remember, I just need the function body.\n" +
-                    "Your function should return String.", {});
-            } else {
-                if (runner.hasCommand(words[0])) {
-                    var result = runner.exec(words[0]);
-                    this.postMessage(channel, result, {});
-                } else {
-                    this.postMessage(channel, "Teach me something...");
-                }
-            }
-        } else {
-            command.create(text);
-            this.postMessage(channel, "Congratulations! Your command " + command.name + " was successfuly created.", {});
-            writer.createStash[message.user] = undefined;
-        }
+        messageHandler.handle(this, message);
     }
 };
 
-Marvin.prototype._isMentioningMarvin = function (message) {
+Marvin.prototype._wasMentioned = function (message) {
     var text = message.text;
 
     if (text) {
