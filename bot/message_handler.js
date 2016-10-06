@@ -22,34 +22,32 @@ exports.handle = function(message) {
         words = words.slice(1);
     }
 
-    let commandName = null;
-
     if (writer.isCreatingCommand(message.user)) {
         let commandFactory = writer.getCommandFactory(message.user);
 
         commandFactory.create(message.text);
 
-        marvin.postMessage(message.channel, "Congratulations! Your command **" + commandFactory.name + "** was successfuly created.", {});
+        marvin.postMessage(message.channel, `Congratulations! Your command **${commandFactory.name}** was successfully created.`, {});
     } else {
         if (marvin._isChannelConversation(message) && !marvin._wasMentioned(message)) {
             return;
         }
 
         if (words[0] === 'create') {
-            writer.startCommandCreation(words[1], message.user);
+            let commandName = words[1];
 
-            marvin.postMessage(message.channel,
-                "Ok, I will create the command **" + commandName + "** for you.\n" +
-                "Tell me which JS do you want to run. Remember, I just need the function body.\n" +
-                "Your function must return String.", {});
+            writer.startCommandCreation(commandName, message.user);
+
+            marvin.postMessage(message.channel, `Ok, I will create the command **${commandName}** for you.`);
+            marvin.postMessage(message.channel, `Tell me which JS do you want to run. Remember, I just need the function body.`);
+            marvin.postMessage(message.channel, `Your function must return String.`);
         } else {
             if (runner.hasCommand(words[0])) {
-                commandName = words[0];
+                let commandName = words[0];
                 var result = runner.execute(commandName);
-                marvin.postMessage(message.channel, result, {});
+                marvin.postMessage(message.channel, result);
             } else {
-                console.log("posting message");
-                marvin.postMessage(message.channel, "Teach me something...", {});
+                marvin.postMessage(message.channel, `Teach me something...`);
             }
         }
     }

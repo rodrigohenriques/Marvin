@@ -41,6 +41,7 @@ function createCommand(name, code) {
 
 function startCommandCreation(commandName, user) {
     commandCreationStash[user] = {
+        name: commandName,
         create: (code) => createCommand(commandName, code)
     };
 }
