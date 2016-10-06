@@ -1,55 +1,60 @@
 /**
  * Created by rodrigohenriques on 9/30/16.
  */
+"use strict";
 
-// Message Handler
-
+const util = require('util');
 const writer = require('../command/writer');
 const runner = require('../command/runner');
 
-exports.handle = function(marvin, message) {
-    var channel = message.channel;
-    var text = message.text;
+var marvin = {};
 
-    var words = text.split(' ');
+exports.init = function(m) {
+    marvin = m;
+};
+
+exports.handle = function(message) {
+    log(message);
+
+    let words = message.text.split(' ');
 
     if (marvin._wasMentioned(message)) {
         words = words.slice(1);
     }
 
-    var commandFactory = writer.createStash[message.user];
+    let commandName = null;
 
-    var commandName = null;
+    if (writer.isCreatingCommand(message.user)) {
+        let commandFactory = writer.getCommandFactory(message.user);
 
-    if (commandFactory === undefined) {
+        commandFactory.create(message.text);
+
+        marvin.postMessage(message.channel, "Congratulations! Your command **" + commandFactory.name + "** was successfuly created.", {});
+    } else {
         if (marvin._isChannelConversation(message) && !marvin._wasMentioned(message)) {
             return;
         }
 
         if (words[0] === 'create') {
-            commandName = words[1];
+            writer.startCommandCreation(words[1], message.user);
 
-            writer.createStash[message.user] = {
-                name: commandName,
-                create: writer.createCommand(commandName)
-            };
-
-            marvin.postMessage(channel, "Ok, I will create the command **" + commandName + "** for you.\n" +
+            marvin.postMessage(message.channel,
+                "Ok, I will create the command **" + commandName + "** for you.\n" +
                 "Tell me which JS do you want to run. Remember, I just need the function body.\n" +
-                "Your function should return String.", {});
+                "Your function must return String.", {});
         } else {
             if (runner.hasCommand(words[0])) {
                 commandName = words[0];
                 var result = runner.execute(commandName);
-                marvin.postMessage(channel, result, {});
+                marvin.postMessage(message.channel, result, {});
             } else {
                 console.log("posting message");
-                marvin.postMessage(channel, "Teach me something...", {});
+                marvin.postMessage(message.channel, "Teach me something...", {});
             }
         }
-    } else {
-        commandFactory.create(text);
-        marvin.postMessage(channel, "Congratulations! Your command **" + commandFactory.name + "** was successfuly created.", {});
-        writer.createStash[message.user] = undefined;
     }
 };
+
+function log(message) {
+    console.log(util.inspect(message));
+}

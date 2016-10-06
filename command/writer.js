@@ -1,24 +1,27 @@
 /**
  * Created by rodrigohenriques on 9/29/16.
  */
+"use strict";
+
 const fs = require('fs');
 const commandsPath = './commands';
 
-exports.createStash = {};
+var commandCreationStash = {};
 
-exports.createCommand = function(commandName) {
-    return function(code) {
-        return exports.addCommand(commandName, code);
-    }
+module.exports = {
+    startCommandCreation: startCommandCreation,
+    isCreatingCommand: isCreatingCommand,
+    getCommandFactory: getCommandFactory
 };
 
-exports.addCommand = function (name, code) {
+function createCommand(name, code) {
     var template = "templates/simple.template";
 
     fs.readFile(template, 'utf8', function (err, data) {
         if (err) {
             return console.log(err);
         }
+
         code = code.replace("&lt;", "<");
         code = code.replace("&gt;", ">");
 
@@ -34,4 +37,22 @@ exports.addCommand = function (name, code) {
             if (err) return console.log(err);
         });
     });
-};
+}
+
+function startCommandCreation(commandName, user) {
+    commandCreationStash[user] = {
+        create: (code) => createCommand(commandName, code)
+    };
+}
+
+function getCommandFactory(user) {
+    let command = commandCreationStash[user];
+
+    commandCreationStash[user] = undefined;
+
+    return command;
+}
+
+function isCreatingCommand(user) {
+    return commandCreationStash[user] !== undefined;
+}

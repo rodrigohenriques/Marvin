@@ -4,8 +4,6 @@
 'use strict';
 
 const util = require('util');
-const path = require('path');
-const fs = require('fs');
 const Bot = require('slackbots');
 const messageHandler = require('./message_handler');
 
@@ -13,6 +11,8 @@ var Marvin = function Constructor(settings) {
     this.settings = settings;
     this.settings.name = this.settings.name || 'Marvin';
     this.username = settings.username || 'marvin';
+
+    messageHandler.init(this);
 };
 
 // inherits methods and properties from the Bot constructor
@@ -46,9 +46,7 @@ Marvin.prototype._onMessage = function (message) {
         return;
     }
 
-    logMessage(message);
-
-    messageHandler.handle(this, message);
+    messageHandler.handle(message);
 };
 
 Marvin.prototype._wasMentioned = function (message) {
@@ -81,7 +79,3 @@ Marvin.prototype._getChannelById = function (channelId) {
 };
 
 module.exports = Marvin;
-
-function logMessage(message) {
-    console.log(util.inspect(message));
-}

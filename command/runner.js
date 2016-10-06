@@ -1,7 +1,13 @@
 /**
  * Created by rodrigohenriques on 9/29/16.
  */
-exports.execute = function(command) {
+
+module.exports = {
+    execute: execute,
+    hasCommand: hasCommand
+};
+
+function execute(command) {
     if (command === undefined) {
         console.log('Undefined command');
         return;
@@ -15,9 +21,9 @@ exports.execute = function(command) {
     }
 
     return commandRunner.run();
-};
+}
 
-exports.hasCommand = function(command) {
+function hasCommand(command) {
     try {
         var commandRunner = getCommand(command);
 
@@ -25,8 +31,7 @@ exports.hasCommand = function(command) {
     } catch (err) {
         return false;
     }
-};
-
+}
 
 function getCommand(command) {
     return require('../commands/' + command);
